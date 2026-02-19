@@ -19,4 +19,4 @@ RUN npx prisma generate
 RUN npm run build
 
 # Start with a shell-safe command
-CMD ["sh", "-c", "npm run docker-start"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run start"]

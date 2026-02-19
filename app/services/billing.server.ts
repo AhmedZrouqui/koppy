@@ -38,6 +38,7 @@ export async function getShopSubscription(shop: string) {
 
   // Check if trial has expired — downgrade to block imports
   if (sub.plan === "TRIAL" && sub.trialEndsAt && new Date() > sub.trialEndsAt) {
+    console.log("Trial has expired");
     sub = await db.shopSubscription.update({
       where: { shop },
       data: { trialUsed: true, plan: "TRIAL_EXPIRED" },

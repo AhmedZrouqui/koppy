@@ -2,7 +2,7 @@
   "name": "koppy",
   "private": true,
   "scripts": {
-    "build": "remix vite:build",
+    "build": "prisma generate && remix vite:build",
     "dev": "shopify app dev",
     "config:link": "shopify app config link",
     "generate": "shopify app generate",
@@ -10,7 +10,7 @@
     "config:use": "shopify app config use",
     "env": "shopify app env",
     "start": "remix-serve ./build/server/index.js --port ${PORT:-3000} --host 0.0.0.0",
-    "docker-start": "npx prisma migrate deploy && npm run start",
+    "docker-start": "prisma migrate deploy && npm run start",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "shopify": "shopify",
     "prisma": "prisma",

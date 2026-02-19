@@ -17,4 +17,4 @@ RUN npx prisma generate
 RUN npm run build
 
 # Use shell execution to ensure the migration-to-server handoff works
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start"]
+CMD ["sh", "-c", "npx prisma migrate deploy && echo 'Starting Remix Server2...' && npm run start"]

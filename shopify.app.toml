@@ -8,6 +8,8 @@ embedded = true
 [build]
 automatically_update_urls_on_dev = true
 
+redirect_urls = [ "https://koppy-production.up.railway.app/auth/callback" ]
+
 [webhooks]
 api_version = "2026-04"
 
@@ -24,4 +26,4 @@ api_version = "2026-04"
 scopes = "write_products, read_products, write_files, read_files, write_inventory, read_locales"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [ "https://koppy-production.up.railway.app/auth/callback" ]

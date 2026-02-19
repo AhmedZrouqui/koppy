@@ -54,7 +54,7 @@ export default function JobsPage() {
                 </tr>
               </thead>
               <tbody>
-                {jobs.map((job: { id: React.Key | null | undefined; productTitle: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; status: string; productId: string; createdAt: string | number | Date; }) => (
+                {jobs.map((job) => (
                   <tr key={job.id} style={{ borderBottom: "1px solid #f1f2f3" }}>
                     <td style={{ padding: "8px 12px", fontWeight: 500 }}>{job.productTitle}</td>
                     <td style={{ padding: "8px 12px" }}>{statusBadge(job.status)}</td>

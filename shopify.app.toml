@@ -2,13 +2,11 @@
 
 client_id = "1ffea1574d836a91174b3bdf40fb158d"
 name = "koppy"
-application_url = "https://example.com"
+application_url = "https://koppy-production.up.railway.app"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-
-redirect_urls = [ "https://koppy-production.up.railway.app/auth/callback" ]
 
 [webhooks]
 api_version = "2026-04"
@@ -26,8 +24,7 @@ api_version = "2026-04"
   uri = "/webhooks/app/subscriptions_update"
 
 [access_scopes]
-# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products, read_products, write_files, read_files, write_inventory, read_locales"
+scopes = "write_products,read_products,write_files,read_files,write_inventory,read_locales"
 
 [auth]
 redirect_urls = [ "https://koppy-production.up.railway.app/auth/callback" ]

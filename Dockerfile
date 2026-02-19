@@ -1,21 +1,22 @@
+# Use Node 20 (Better compatibility for Remix/Vite)
 FROM node:20-alpine
 RUN apk add --no-cache openssl
 
-EXPOSE 3000
-
 WORKDIR /app
-
 ENV NODE_ENV=production
 
+# Install dependencies
 COPY package.json package-lock.json* ./
-
 RUN npm ci --omit=dev && npm cache clean --force
-# Remove CLI packages since we don't need them in production by default.
-# Remove this line if you want to run CLI commands in your container.
-# RUN npm remove @shopify/cli
 
+# Copy app files
 COPY . .
 
+# IMPORTANT: Generate Prisma client DURING build
+RUN npx prisma generate
+
+# Build the app
 RUN npm run build
 
-CMD ["npm", "run", "docker-start"]
+# Start with a shell-safe command
+CMD ["sh", "-c", "npm run docker-start"]

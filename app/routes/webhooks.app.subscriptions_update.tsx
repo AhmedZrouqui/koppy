@@ -1,30 +1,32 @@
 import { type ActionFunctionArgs } from "@remix-run/node";
 import { authenticate } from "../shopify.server";
 import { updateShopPlan } from "~/services/billing.server";
+import type { PlanKey } from "~/services/billing.plan";
+import db from "~/db.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { topic, shop, session, payload } = await authenticate.webhook(request);
+  const { topic, shop, payload } = await authenticate.webhook(request);
 
   if (topic === "APP_SUBSCRIPTIONS_UPDATE") {
-    // payload is AppSubscription
-    // We need to parse the payload to match it to our internal plan keys
-    // The payload structure depends on API version, but generally contains name and status.
-    
-    // Simple logic: check the active line item
-    const lineItem = payload.app_subscription?.line_items?.[0];
-    const planName = lineItem?.plan?.pricing_details?.price === "2.99" ? "STARTER" :
-                     lineItem?.plan?.pricing_details?.price === "4.99" ? "GROWTH" :
-                     lineItem?.plan?.pricing_details?.price === "9.99" ? "UNLIMITED" : null;
+    const subscription = payload.app_subscription;
+    const status = subscription?.status;
 
-    if (planName) {
-        await updateShopPlan(shop, planName);
-    } else {
-        // If canceled or expired, might want to set to a default or handling
-        // For now we just track active upgrades.
-        // If status is CANCELLED, we might want to downgrade to free/trial logic or block access.
-        // But for this task, we focus on tracking the plan.
+    // Match by name instead of price — more reliable
+    const rawName = subscription?.name?.toUpperCase() as PlanKey;
+
+    console.log(`[webhook] shop: ${shop} | plan: ${rawName} | status: ${status}`);
+
+    if (status === "ACTIVE" && rawName) {
+      await updateShopPlan(shop, rawName);
+    }
+
+    if (["CANCELLED", "EXPIRED", "DECLINED", "FROZEN"].includes(status)) {
+      await db.shopSubscription.update({
+        where: { shop },
+        data: { plan: "TRIAL_EXPIRED" },
+      });
     }
   }
 
-  return new Response();
+  return new Response("OK", { status: 200 });
 };

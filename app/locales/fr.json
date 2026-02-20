@@ -71,7 +71,9 @@
     "polling_label": "Mise à jour toutes les 1,5 secondes…",
     "status_pending": "EN ATTENTE",
     "status_completed": "TERMINÉ",
-    "status_failed": "ÉCHOUÉ"
+    "status_failed": "ÉCHOUÉ",
+    "trimmed_banner_title": "Importation partielle démarrée",
+    "trimmed_banner_body": "Seulement {queued} produits ont été mis en file d'attente selon votre quota restant. Mettez à niveau votre plan pour importer davantage."
   },
   "jobs": {
     "page_title": "Historique des imports",

@@ -71,7 +71,9 @@
     "polling_label": "Updating every 1.5 seconds…",
     "status_pending": "PENDING",
     "status_completed": "COMPLETED",
-    "status_failed": "FAILED"
+    "status_failed": "FAILED",
+    "trimmed_banner_title": "Partial import started",
+    "trimmed_banner_body": "Only {queued} products were queued based on your remaining plan quota. Upgrade your plan to import more."
   },
   "jobs": {
     "page_title": "Import History",

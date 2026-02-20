@@ -71,7 +71,9 @@
     "polling_label": "Aktualisierung alle 1,5 Sekunden…",
     "status_pending": "AUSSTEHEND",
     "status_completed": "ABGESCHLOSSEN",
-    "status_failed": "FEHLGESCHLAGEN"
+    "status_failed": "FEHLGESCHLAGEN",
+    "trimmed_banner_title": "Teilweiser Import gestartet",
+    "trimmed_banner_body": "Nur {queued} Produkte wurden basierend auf Ihrem verbleibenden Kontingent in die Warteschlange gestellt. Upgraden Sie Ihren Plan, um mehr zu importieren."
   },
   "jobs": {
     "page_title": "Importverlauf",

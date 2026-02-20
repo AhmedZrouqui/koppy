@@ -71,7 +71,9 @@
     "polling_label": "Actualizando cada 1,5 segundos…",
     "status_pending": "PENDIENTE",
     "status_completed": "COMPLETADO",
-    "status_failed": "FALLIDO"
+    "status_failed": "FALLIDO",
+    "trimmed_banner_title": "Importación parcial iniciada",
+    "trimmed_banner_body": "Solo se pusieron en cola {queued} productos según tu cuota restante. Mejora tu plan para importar más."
   },
   "jobs": {
     "page_title": "Historial de importaciones",

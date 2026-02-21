@@ -11,7 +11,8 @@ import { importQueue } from "~/services/queue.server";
 import { getTranslations } from "~/services/i18n.server";
 import { interpolate } from "~/utils/interpolate";
 import db from "~/db.server";
-import { checkAndIncrementImportCount } from "~/services/billing.server";
+import { checkAndIncrementImportCount, getShopSubscription } from "~/services/billing.server";
+import { PlanKey, PLANS } from "~/services/billing.plan";
 
 // ---- Loader: returns live job status for polling ----
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -52,9 +53,23 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   if (actionType === "bulkImport") {
-    const products = JSON.parse(formData.get("products") as string);
+    let products = JSON.parse(formData.get("products") as string);
 
-    // ✅ Check + atomically increment before doing anything
+    // Trim to remaining quota instead of rejecting entirely
+    const sub = await getShopSubscription(session.shop);
+    const plan = (sub.plan as PlanKey) ?? "TRIAL";
+    const limit = PLANS[plan].limit;
+
+    if (limit !== Infinity) {
+      const remaining = Math.max(0, limit - sub.importCount);
+      if (remaining === 0) {
+        return json({ error: "Import limit reached. Please upgrade your plan.", t });
+      }
+      if (products.length > remaining) {
+        products = products.slice(0, remaining);
+      }
+    }
+
     try {
       await checkAndIncrementImportCount(session.shop, products.length);
     } catch (err: any) {
@@ -85,7 +100,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       )
     );
 
-    return json({ queued: products.length, t });
+    return json({ queued: products.length, trimmed: products.length < JSON.parse(formData.get("products") as string).length, t });
   }
 
   return json({ t });
@@ -230,6 +245,16 @@ export default function ImportPage() {
               {error && (
                 <Banner tone="critical" title={ti?.error_banner_title ?? "Could not load store"}>
                   <Text as="p">{error}</Text>
+                </Banner>
+              )}
+
+              {fetcher.data?.trimmed && (
+                <Banner tone="warning" title={ti?.trimmed_banner_title ?? "Partial import started"}>
+                  <Text as="p">
+                    {ti
+                      ? interpolate(ti.trimmed_banner_body, { queued: fetcher.data.queued })
+                      : `Only ${fetcher.data.queued} products were queued based on your remaining plan quota. Upgrade to import more.`}
+                  </Text>
                 </Banner>
               )}
             </BlockStack>
